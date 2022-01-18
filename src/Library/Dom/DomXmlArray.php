@@ -8,6 +8,9 @@
 
 namespace Marcellosendos\PhpUtility\Library\Dom;
 
+use DOMDocument;
+use DOMElement;
+
 class DomXmlArray
 {
 
@@ -22,34 +25,34 @@ class DomXmlArray
 // --- SETTINGS -----------------------------------------------------------------------------------
 
     /**
-     * @var  string
+     * @var string
      */
     protected $VERSION = '1.0';
 
     /**
-     * @var  string
+     * @var string
      */
     protected $ENCODING = 'utf-8';
 
 // --- RUNTIME ------------------------------------------------------------------------------------
 
     /**
-     * @var  \DOMDocument
+     * @var DOMDocument|null
      */
     protected $DOC = null;
 
     /**
-     * @var  array
+     * @var array
      */
     protected $PROCESSING = [];
 
     /**
-     * @var  array
+     * @var array
      */
     protected $ARRAY = [];
 
     /**
-     * @var  string
+     * @var string
      */
     protected $XML = '';
 
@@ -134,7 +137,7 @@ class DomXmlArray
      */
     public function setArray($array)
     {
-        if (is_array($array) && count($array) > 0 || is_a($array, DomXmlElement::class)) {
+        if ((is_array($array) && count($array) > 0) || $array instanceof DomXmlElement) {
             $this->ARRAY = $array;
         }
     }
@@ -192,7 +195,7 @@ class DomXmlArray
         $this->PROCESSING = [];
         $this->ARRAY = [];
 
-        $this->DOC = new \DOMDocument();
+        $this->DOC = new DOMDocument();
 
         if ($this->DOC->loadXML($this->XML) === false) {
             return false;
@@ -221,7 +224,7 @@ class DomXmlArray
     }
 
     /**
-     * @param \DOMElement $node
+     * @param DOMElement $node
      * @return array
      */
     protected function parseXMLElementNode($node)
@@ -283,7 +286,7 @@ class DomXmlArray
     {
         $this->XML = '';
 
-        $this->DOC = new \DOMDocument($this->VERSION, $this->ENCODING);
+        $this->DOC = new DOMDocument($this->VERSION, $this->ENCODING);
         $this->DOC->formatOutput = true;
 
         foreach ($this->PROCESSING as $instruction) {
@@ -293,7 +296,7 @@ class DomXmlArray
         foreach ($this->ARRAY as $element) {
             $elementNode = $this->createXMLElementNode($element);
 
-            if (is_a($elementNode, \DOMElement::class)) {
+            if ($elementNode instanceof DOMElement) {
                 $this->DOC->appendChild($elementNode);
             }
         }
@@ -305,11 +308,11 @@ class DomXmlArray
 
     /**
      * @param DomXmlElement|array $element
-     * @return \DOMElement
+     * @return DOMElement
      */
     protected function createXMLElementNode($element)
     {
-        if (is_a($element, DomXmlElement::class)) {
+        if ($element instanceof DomXmlElement) {
             /* @var DomXmlElement $XMLElement */
             $XMLElement = $element;
         } elseif (is_array($element) && count($element) > 0) {
@@ -334,7 +337,7 @@ class DomXmlArray
 
             if ($XMLElement->hasChildren()) {
                 foreach ($XMLElement->getChildren() as $child) {
-                    if (is_a($child, DomXmlElement::class)) {
+                    if ($child instanceof DomXmlElement) {
                         /* @var DomXmlElement $XMLChild */
                         $XMLChild = $child;
                     } elseif (is_array($child) && count($child) > 0) {
@@ -349,7 +352,7 @@ class DomXmlArray
                     } else {
                         $childNode = $this->createXMLElementNode($child);
 
-                        if (is_a($childNode, \DOMElement::class)) {
+                        if ($childNode instanceof DOMElement) {
                             $node->appendChild($childNode);
                         }
                     }
@@ -361,7 +364,7 @@ class DomXmlArray
     }
 
     /**
-     * @param \DOMElement $node
+     * @param DOMElement $node
      * @param DomXmlElement $XMLElement
      */
     protected function appendDataNode(&$node, $XMLElement)
@@ -378,5 +381,4 @@ class DomXmlArray
             }
         }
     }
-
 }

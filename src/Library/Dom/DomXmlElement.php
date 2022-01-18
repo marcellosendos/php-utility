@@ -331,5 +331,4 @@ class DomXmlElement
 
         return $result;
     }
-
 }
