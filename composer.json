@@ -1,0 +1,25 @@
+{
+	"name": "marcellosendos/php-utility",
+	"description": "General PHP utility functions",
+	"type": "library",
+	"authors": [
+		{
+			"name": "Marcel Oehler",
+			"email": "mo@marcellosendos.ch"
+		}
+	],
+	"license": [
+		"GPL-3.0-or-later"
+	],
+	"require": {
+		"php": "^7.0 || ^8.0",
+		"ext-gd": "*",
+		"ext-json": "*",
+		"ext-zlib": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Marcellosendos\\PhpUtility\\": "src/"
+		}
+	}
+}

@@ -1,1 +1,3 @@
-# php-utility
+## php-utility
+
+General PHP utility functions
